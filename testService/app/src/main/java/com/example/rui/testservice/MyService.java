@@ -2,10 +2,16 @@ package com.example.rui.testservice;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * Service run on the UI thread!!!
+ */
 public class MyService extends Service {
+
+    private MyBinder mBinder = new MyBinder();
 
     public static final String TAG = "MyService";
     public MyService() {
@@ -14,9 +20,13 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "onCreate" + " @threadid=" + Thread.currentThread().getId());
     }
 
+    /**
+     * If start and then bind service, you need to call both stop and unbind to let
+     * service call the onDestroy() callback.
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -30,9 +40,24 @@ public class MyService extends Service {
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind");
+        return super.onUnbind(intent);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
 //        throw new UnsupportedOperationException("Not yet implemented");
-        return null;
+        Log.d(TAG, "onBind");
+        return mBinder;
+    }
+
+    class MyBinder extends Binder {
+
+        public long calcFactorial(int n) {
+            if (n <= 1) return 1;
+            return n * calcFactorial(n-1);
+        }
     }
 }

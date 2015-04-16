@@ -23,9 +23,27 @@
         android:layout_height="wrap_content"
         android:text="stop service"
         android:id="@+id/btn_stop"
-        android:layout_marginTop="43dp"
         android:layout_below="@+id/btn_start"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bind service"
+        android:id="@+id/btn_bind"
+        android:layout_alignTop="@+id/btn_start"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="unbind service"
+        android:id="@+id/btn_unbind"
+        android:layout_alignTop="@+id/btn_stop"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

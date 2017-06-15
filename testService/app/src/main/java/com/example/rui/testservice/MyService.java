@@ -14,15 +14,17 @@ import android.util.Log;
 public class MyService extends Service {
 
     private MyBinder mBinder = new MyBinder();
+    private Thread thread;
+    private boolean logging = true;
 
-    public static final String TAG = "MyService";
+    public static final String TAG = "TestService";
     public MyService() {
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate" + " @threadid=" + Thread.currentThread().getId());
+        Log.w(TAG, "onCreate" + " @threadid=" + Thread.currentThread().getId());
 
         Intent notiIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notiIntent, 0);
@@ -43,18 +45,34 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        Log.w(TAG, "onDestroy");
+        logging = false;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
+        Log.w(TAG, "onStartCommand" + " @threadid=" + Thread.currentThread().getId());
+
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (logging) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.w(TAG, "Sleeped 2s~");
+                }
+            }
+        });
+        thread.start();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(TAG, "onUnbind");
+        Log.w(TAG, "onUnbind");
         return super.onUnbind(intent);
     }
 
@@ -62,7 +80,7 @@ public class MyService extends Service {
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
 //        throw new UnsupportedOperationException("Not yet implemented");
-        Log.d(TAG, "onBind");
+        Log.w(TAG, "onBind" + " @threadid=" + Thread.currentThread().getId());
         return mBinder;
     }
 

@@ -15,19 +15,19 @@ import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "TestService";
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MyService.MyBinder binder = (MyService.MyBinder) service;
-            Log.d(TAG, "onServiceConnected" + " @threadid=" + Thread.currentThread().getId());
-            Log.d(TAG, "factorial of 4 is " + binder.calcFactorial(4));
+            Log.w(TAG, "onServiceConnected" + " @threadid=" + Thread.currentThread().getId());
+            Log.w(TAG, "factorial of 4 is " + binder.calcFactorial(4));
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "onServiceDisconnected");
+            Log.w(TAG, "onServiceDisconnected");
         }
     };
 
@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setClickListener(R.id.btn_bind);
         setClickListener(R.id.btn_unbind);
 
-        Log.d(TAG, "onCreate" + " @threadid=" + Thread.currentThread().getId());
+        Log.w(TAG, "onCreate" + " @threadid=" + Thread.currentThread().getId());
     }
 
     @Override

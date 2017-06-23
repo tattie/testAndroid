@@ -32,4 +32,16 @@
         android:id="@+id/btn_unbind"
         />
 
+    <Button
+        android:id="@+id/btn_foo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start FOO"/>
+
+    <Button
+        android:id="@+id/btn_baz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start BAZ"/>
+
 </LinearLayout>

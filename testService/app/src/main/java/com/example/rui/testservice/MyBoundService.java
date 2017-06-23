@@ -11,22 +11,21 @@ import android.util.Log;
 /**
  * Service run on the UI thread!!!
  */
-public class MyService extends Service {
+public class MyBoundService extends Service {
 
     private MyBinder mBinder = new MyBinder();
-    private Thread thread;
-    private boolean logging = true;
 
     public static final String TAG = "TestService";
-    public MyService() {
+    public MyBoundService() {
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.w(TAG, "onCreate" + " @threadid=" + Thread.currentThread().getId());
+        Log.w(TAG, "onCreate in MyBoundService" + " @threadid=" + Thread.currentThread().getId());
 
         Intent notiIntent = new Intent(this, MainActivity.class);
+        notiIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notiIntent, 0);
         Notification noti = new Notification.Builder(this)
                 .setContentTitle("Title")
@@ -45,31 +44,14 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.w(TAG, "onDestroy");
-        logging = false;
+        Log.w(TAG, "onDestroy in MyBoundService");
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.w(TAG, "onStartCommand" + " @threadid=" + Thread.currentThread().getId());
 
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (logging) {
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Log.w(TAG, "Sleeped 2s~");
-                }
-            }
-        });
-        thread.start();
-        return super.onStartCommand(intent, flags, startId);
-    }
 
+    // unbind will cause destory the service if no activity bind to it.
+    // if don't call unbind, when the activity is destroyed, it will automatically
+    // unbind and destroy this service.
     @Override
     public boolean onUnbind(Intent intent) {
         Log.w(TAG, "onUnbind");
